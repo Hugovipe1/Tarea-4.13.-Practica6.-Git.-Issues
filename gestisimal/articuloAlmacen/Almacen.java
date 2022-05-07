@@ -36,11 +36,19 @@ import com.google.gson.reflect.TypeToken;
 public class Almacen {
 
   private List<Articulo> almacen =  new ArrayList<>();
-
+  /**
+   * Crea un nuevo Almacen
+   */
   public Almacen() {
 
   }
-
+  /**
+   * Crea un nuveo Almacen con los parametros indicados
+   * @param fichero fichero donde se almacena un objeto almacen en formato XML o JSON
+   * @throws IOException 
+   * @throws ParserConfigurationException
+   * @throws SAXException
+   */
   public Almacen(String fichero) throws IOException, ParserConfigurationException, SAXException {
     if (fichero.substring(fichero.lastIndexOf(".")).equals(".json")){
 
@@ -91,7 +99,17 @@ public class Almacen {
 
 
   }
-
+  /**
+   * Se encarga de incluir un Articulo en el almacen
+   * @param nombre nombre del articulo a incluir en el almacen
+   * @param marca marca del articulo a incluir en el almacen
+   * @param precioCompra precioCompra del articulo a incluir en el almacen
+   * @param precioVenta precioVenta del articulo a incluir en el almacen
+   * @param numUnidades numUnidades del articulo a incluir en el almacen
+   * @param stockSeguridad stockSeguridad del articulo a incluir en el almacen
+   * @param stockMaximo stockMaximo del articulo a incluir en el almacen
+   * @throws ArticuloEnAlmacenException cuando se intenta añadir un articulo que ya se encuentra en el almacen
+   */
   public void incluirArticulo(String nombre, String marca, double precioCompra, 
       double precioVenta, int numUnidades, int stockSeguridad, int stockMaximo) throws ArticuloEnAlmacenException {
     if(!exists(nombre,marca)) {
@@ -102,33 +120,65 @@ public class Almacen {
     }
 
   }
-
+  /**
+   * Se encarga de incluir un Articulo en el almacen
+   * @param nombre nombre del articulo a incluir en el almacen
+   * @param marca marca del articulo a incluir en el almacen
+   * @param precioCompra precioCompra del articulo a incluir en el almacen
+   * @param precioVenta precioVenta del articulo a incluir en el almacen
+   * @param numUnidades numUnidades del articulo a incluir en el almacen
+   * @param stockSeguridad stockSeguridad del articulo a incluir en el almacen
+   * @throws ArticuloEnAlmacenException cuando se intenta añadir un articulo que ya se encuentra en el almacen
+   */
   public void incluirArticulo(String nombre, String marca, double precioCompra,
       double precioVenta, int numUnidades, int stockSeguridad) throws ArticuloEnAlmacenException{
 
     incluirArticulo(nombre, marca, precioCompra, precioVenta, numUnidades, stockSeguridad, 0);
   }
-
+  /**
+   * Se encarga de incluir un Articulo en el almacen
+   * @param nombre nombre del articulo a incluir en el almacen
+   * @param marca marca del articulo a incluir en el almacen
+   * @param precioCompra precioCompra del articulo a incluir en el almacen
+   * @param precioVenta precioVenta del articulo a incluir en el almacen
+   * @param numUnidades numUnidades del articulo a incluir en el almacen
+   * @throws ArticuloEnAlmacenException cuando se intenta añadir un articulo que ya se encuentra en el almacen
+   */
   public void incluirArticulo(String nombre, String marca, double precioCompra,
       double precioVenta, int numUnidades) throws ArticuloEnAlmacenException {
     incluirArticulo(nombre, marca, precioCompra, precioVenta, numUnidades, 0, 0);
   }
 
-
+  /**
+   * Se encarga de eliminar un Articulo en el almacen
+   * @param code code del articulo a eliminar en el almacen
+   * @throws ArticuloNoEncontradoException cuando no encuentra el articulo a eliminar en el almacen
+   */
   public void eliminarArticulo(int code) throws ArticuloNoEncontradoException {
     if(!almacen.remove(new Articulo(code))) {
       throw new ArticuloNoEncontradoException("El articulo que se desea borrar no se encuentra en el almacen");
     }
   }
 
-
+  /**
+   * Se encarga de eliminar un Articulo en el almacen
+   * @param nombre nombre del articulo a eliminar en el almacen
+   * @param marca marca del articulo a eliminar en el almacen
+   * @throws ArticuloNoEncontradoException cuando no encuentra el articulo a eliminar en el almacen
+   */
   public void eliminarArticulo(String nombre, String marca) throws ArticuloNoEncontradoException {
     if(!exists(nombre, marca)) {
       throw new ArticuloNoEncontradoException("El articulo que se desea borrar no se encuentra en el almacen");
     }
     almacen.removeIf(n -> n.getMarca().equals(nombre) && n.getNombre().equals(nombre));
   }
-
+  /**
+   * Se encarga de buscar en el almacen un articulo para saber si lo contiene dicho almacen
+   * @param name name del articulo a buscar en el almacen
+   * @param marca marca del articiculo a buscar en el almacen 
+   * @return true si el articulo se encuentra en el almacen. False si no se encuentra el articulo en 
+   *          el almacen
+   */
   public boolean exists(String name, String marca) {
     for(Articulo art : almacen) {
       if(art.getNombre().equals(name) && art.getMarca().equals(marca)) {
@@ -138,7 +188,13 @@ public class Almacen {
     return false;
   }
 
-
+  /**
+   * Añade unidades a un articulo determinado del almacen.
+   * @param code code del articulo a añadir unidades del almacen
+   * @param numUnidades numUnidades del articulo a añadir unidades del almacen
+   * @throws ArticuloNoEncontradoException cuando el articulo a añadir unidades no se encuentra en el almacen
+   * @throws StockIllegalException cuando el articulo a añadir unidades supera el stockMaximo del articulo
+   */
   public void anadirUnidades(int code, int numUnidades) throws ArticuloNoEncontradoException, StockIllegalException {
     if(almacen.contains(new Articulo(code))){
       Articulo articulo = almacen.get(almacen.indexOf(new Articulo(code)));
@@ -149,7 +205,13 @@ public class Almacen {
 
   }
 
-
+  /**
+   * Elimina unidades de un articulo determinado del almacen
+   * @param code code del articulo a eliminar unidades del almacen
+   * @param numUnidades numUnidades del articulo a eliminar unidades del almacen
+   * @throws ArticuloNoEncontradoException cuando el articulo a eliminar unidades no se encuentra en el almacen
+   * @throws StockIllegalException cuando el articulo a eliminar unidades supera el stockMaximo del articulo
+   */
   public void eliminarUnidades(int code, int numUnidades) throws ArticuloNoEncontradoException, StockIllegalException{
     if(almacen.contains(new Articulo(code))){
       Articulo articulo = almacen.get(almacen.indexOf(new Articulo(code)));
@@ -159,6 +221,19 @@ public class Almacen {
     throw new ArticuloNoEncontradoException("No se ha encontrado el artículo");
   }
 
+  /**
+   * Modifica un articulo determinado del almacen
+   * @param code code del articulo a modificar del almacen
+   * @param nombre nombre del articulo a modificar del almacen
+   * @param marca marca del articulo a modificar del almacen
+   * @param precioCompra precioCompra del articulo a modificar del almacen
+   * @param precioVenta precioVenta del articulo a modificar del almacen
+   * @param numUnidades numUnidades del articulo a modificar del almacen
+   * @param stockSeguridad stockSeguridad del articulo a modificar del almacen
+   * @param stockMaximo stockMaximo del articulo a modificar del almacen
+   * @throws ArticuloNoEncontradoException cuando el articulo a modificar del almacen no se encuentra
+   * @throws ArticuloEnAlmacenException cuando cambias el articulo y ya se encuentra otro en el almacen con otro nombre
+   */
   public void modificarArticulo(int code, String nombre, String marca,double precioCompra,
       double precioVenta, int numUnidades, int stockSeguridad, int stockMaximo) 
           throws ArticuloNoEncontradoException, ArticuloEnAlmacenException {
@@ -171,7 +246,11 @@ public class Almacen {
     }
     articulo.set(nombre, marca, precioCompra, precioVenta, numUnidades, stockSeguridad, stockMaximo);
   }
-
+  /**
+   * Guarda el objeto Almacen en un fichero de formato JSON
+   * @param fichero fichero JSON donde se quiera guardar el objeto almacen
+   * @throws IOException
+   */
   public void guardarJson(String fichero) throws IOException {
 
     String json = new Gson().toJson(almacen);
@@ -183,7 +262,13 @@ public class Almacen {
 
     System.out.println("Creado almacen.json");
   }
-
+  /**
+   * Guarda el objeto almacen en un fichero de formato XML
+   * @param fichero fichero XML donde se quiere guardar el objeto almacen
+   * @throws IOException
+   * @throws TransformerException
+   * @throws ParserConfigurationException
+   */
   public void guardarXml(String fichero) throws IOException, TransformerException, ParserConfigurationException {
 
 
@@ -258,7 +343,10 @@ public class Almacen {
     System.out.println("Creado "+ fichero);
   }
 
-
+  /**
+   * Devuelve una representación del almacen en forma de cadena. 
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString() {
     return "almacen [almacen=" + almacen + "]";

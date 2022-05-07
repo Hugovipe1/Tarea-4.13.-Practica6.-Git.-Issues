@@ -10,14 +10,23 @@ import gestisimal.articuloAlmacen.ArticuloNoEncontradoException;
 import gestisimal.articuloAlmacen.StockIllegalException;
 import menu.Menu;
 import util.Util;
-
+/**
+ * 
+ * @author Hugo Vicente Peligro
+ *
+ *
+ */
 public class TestAlmacen {
   private static Almacen almacen = new Almacen();
 
+  /**
+   * Menu del programa
+   * @param args No se utiliza
+   */
   public static void main(String[] args){
     Menu menu = createMenu();
     rellenarAlmacen();
-    
+
     int opt;
     do {
       opt = menu.choose();
@@ -38,7 +47,10 @@ public class TestAlmacen {
 
   }
 
-
+  /**
+   * Menu principal de la aplicacion
+   * @return Opciones del menu de almacen
+   */
   private static Menu createMenu() {
     return new Menu("Menu de opciones","Añadir artículo", "Eliminar artículo",
         "Añadir unidades de un artículo", "Eliminar unidades de un artículo",
@@ -47,7 +59,9 @@ public class TestAlmacen {
         "Crear almacén a partir de XML",
         "Mostrar almacén", "Salir del programa");
   }
-  
+  /**
+   * rellena el almacen con 5 articulos
+   */
   private static void rellenarAlmacen() {
     for(int i = 1; i <= 5; i++) {
       try {
@@ -57,7 +71,9 @@ public class TestAlmacen {
       }
     }
   }
-
+  /**
+   * Añade un articulo a almacen solicitando sus datos por consola
+   */
   private static void anadirArticulo(){
     String nombre = Util.readStr("Introduce el nombre del articulo ");
     String marca = Util.readStr("Introduce la marca del articulo ");
@@ -73,7 +89,9 @@ public class TestAlmacen {
       e.printStackTrace();
     }
   }
-
+  /**
+   * Elimina un articulo del almacen solicitando sus datos por consola
+   */
   private static void eliminarArticulo(){
     int code = Util.readInt("Introduce el código del articulo a eliminar");
     try {
@@ -82,13 +100,17 @@ public class TestAlmacen {
       printCodigoErroneo();
     }
   }
-
+  /**
+   * Muestra un mensaje de error si no encuentra un articulo dentro del almacen
+   */
   private static void printCodigoErroneo() {
     System.err.println("ERROR: ese código no corresponde a ningún artículo.");
-    
+
   }
 
-
+  /**
+   * Añade unidades a un articulo del almacen, solicitando sus datos por consola
+   */
   private static void anadirUnidades(){
     int code = Util.readInt("Introduce el código del articulo a añadir unidades");
     int numUnidades = Util.readInt("Introduce el número de unidades a añadir al artículo");
@@ -101,7 +123,9 @@ public class TestAlmacen {
       e.printStackTrace();
     }
   }
-
+  /**
+   * Elimina unidades de un articulo del almacen, solicitando sus datos por consola
+   */
   private static void eliminarUnidades(){
     int code = Util.readInt("Introduce el código del articulo a eliminar unidades");
     int numUnidades = Util.readInt("Introduce el número de unidades a eliminar al artículo");
@@ -114,6 +138,9 @@ public class TestAlmacen {
       e.printStackTrace();
     }
   }
+  /**
+   * Modifica un articulo del almacen, solicitando sus datos por consola
+   */
   private static void modificarArticulo(){
     int code = Util.readInt("Introduce el código del articulo a modificar");
     String nombre = Util.readStr("Introduce el nombre del articulo ");
@@ -131,7 +158,9 @@ public class TestAlmacen {
       System.err.println("El nombre y la marca ya existen en el almacén");
     }
   }
-  
+  /**
+   * Guarda un objeto almacen en un fichero con formato JSON pedido por consola
+   */
   private static void guardarJson() {
     try {
       almacen.guardarJson(Util.readStr("Nombre del fichero con extensión .json"));
@@ -139,7 +168,9 @@ public class TestAlmacen {
       e.printStackTrace();
     }
   }
-  
+  /**
+   * Genera un objeto Almacen a partir de un fichero JSON pedido por consola
+   */
   private static void almacenAPartirDeJson() {
     try {
       try {
@@ -150,25 +181,29 @@ public class TestAlmacen {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    
+
   }
-  
+  /**
+   * Genera un objeto Almacen a partir de un fichero JSON pedido por consola
+   */
   private static void guardarXml() {
     try {
       almacen.guardarXml(Util.readStr("Nombre del fichero con extensión .xml"));
- 
+
     } catch (TransformerException e) {
-      
+
       e.printStackTrace();
     } catch (ParserConfigurationException e) {
-      
+
       e.printStackTrace();
     }catch (IOException e) {
-      
+
       e.printStackTrace();
     }
   }
-  
+  /**
+   * Genera un objeto Almacen a partir de un fichero XML pedido por consola
+   */
   private static void almacenAPartirDeXml() {
     try {
       try {
@@ -180,7 +215,9 @@ public class TestAlmacen {
       e.printStackTrace();
     }
   }
-
+  /**
+   * Muestra por pantalla el almacen
+   */
   private static void mostrarAlmacen() {
     System.out.println(almacen);
   }
